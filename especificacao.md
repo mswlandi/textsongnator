@@ -19,3 +19,4 @@
 	- CheckBox ou texto de nota contínua/nota "discreta" (com beats)
 	- CheckBox ou texto de transição suave entre notas, quando contínua
 	- Uso de números para intervalos e controles mais precisos
+	- Easter Egg do [Konami Code](https://pt.wikipedia.org/wiki/Código_Konami)
