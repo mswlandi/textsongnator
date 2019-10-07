@@ -1,7 +1,5 @@
 <center> Henry Bernardo Kochenborger de Avila - 00301161 </center>
-
 <center> Marcos Samuel Winkel Landi - 00304688 </center>
-
 ------------------
 
 ## <center>Trabalho Prático - Fase 1</center>
@@ -31,7 +29,7 @@
 
 ### Estruturação das classes
 
-Utilizando a linguagem Python e a biblioteca Pyknon, as seguintes classes serão necessárias - todas aquelas  que são citadas abaixo e não estão definidas explicitamente são classes da biblioteca utilizada (exemplo: Note).
+Utilizando a linguagem Python e a biblioteca [Pyknon](https://github.com/kroger/pyknon), as seguintes classes serão necessárias - todas aquelas  que são citadas abaixo e não estão definidas explicitamente são classes da biblioteca utilizada (exemplo: Note).
 
 Ademais, atributos são definidos por < nome do atributo > : < tipo do atributo >; e operações, por < nome da operação>(< tipos das entradas >) : < tipo da saída >.
 
