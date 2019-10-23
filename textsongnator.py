@@ -65,18 +65,18 @@ class musicSymbolDecoder:
     __currentCharacter = ""
     __symbols = []
 
-    def clear():
-        __currentCharacter = ""
-        __symbols = []
+    def clear(self):
+        self.__currentCharacter = ""
+        self.__symbols = []
 
-    def head():
-        return __symbols.pop()
+    def head(self):
+        return self.__symbols.pop()
 
-    def decode(string):
+    def decode(self, string):
         if mapping[string] != None:
-            __symbols.append(mapping[string])
+            self.__symbols.append(mapping[string])
         else:
-            __symbols.append(musicSymbol.KEEP)
+            self.__symbols.append(musicSymbol.KEEP)
 
 class Player:
     __notes = []
@@ -86,46 +86,46 @@ class Player:
     __decoder = musicSymbolDecoder()
     __instrument = instrumentSymbol.PIANO
 
-    def addNote(note):
-        notes.append(note)
+    def addNote(self, note):
+        self.__notes.append(note)
 
-    def setVolume(vol):
+    def setVolume(self, vol):
         if vol >= 0:
-            __volume = vol
+            self.__volume = vol
 
-    def getVolume():
-        return __volume
+    def getVolume(self):
+        return self.__volume
 
-    def repeatNote():
-        if __notes != []:
-            __notes.append(__notes[0])
+    def repeatNote(self):
+        if self.__notes != []:
+            self.__notes.append(self.__notes[0])
 
-    def setInstrument(instrument):
-        __instrument = instrument
+    def setInstrument(self, instrument):
+        self.__instrument = instrument
 
-    def getInstrument():
-        return __instrument
+    def getInstrument(self):
+        return self.__instrument
 
-    def setOctave(oct):
-        __octave = oct
+    def setOctave(self, oct):
+        self.__octave = oct
 
-    def getOctave():
-        return __octave
+    def getOctave(self):
+        return self.__octave
 
-    def setBeat(bpm):
+    def setBeat(self, bpm):
         if bpm > 0:
-            __beat = bpm
+            self.__beat = bpm
 
-    def getBeat():
-        return __beat
+    def getBeat(self):
+        return self.__beat
 
-    def resetOctave():
-        __octave = 1
+    def resetOctave(self):
+        self.__octave = 1
 
-    def clear():
-        __notes = []
-        __volume = 1
-        __octave = 1
-        __beat = 1
-        __decoder = musicSymbolDecoder()
-        __instrument = instrumentSymbol.PIANO
+    def clear(self):
+        self.__notes = []
+        self.__volume = 1
+        self.__octave = 1
+        self.__beat = 1
+        self.__decoder = musicSymbolDecoder()
+        self.__instrument = instrumentSymbol.PIANO
