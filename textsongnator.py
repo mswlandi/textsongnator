@@ -118,6 +118,7 @@ class Player:
         self.__octave = 1
         self.__beat = 1
         self.__decoder = musicSymbolDecoder()
+        self.__instrumentIter = iter(instrumentSymbol)
         self.__instrument = instrumentSymbol.PIANO
 
     def addNote(self, note):
@@ -129,16 +130,27 @@ class Player:
 
     def getVolume(self):
         return self.__volume
+    
+    def incVolume(self):
+        self.setVolume(self.getVolume() + 1)
+        return self.getVolume()
+    
+    def decVolume(self):
+        self.setVolume(self.getVolume() - 1)
+        return self.getVolume()
 
     def repeatNote(self):
         if self.__notes != []:
-            self.__notes.append(self.__notes[0])
+            self.__notes.append(self.__notes[-1])
 
     def setInstrument(self, instrument):
         self.__instrument = instrument
 
     def getInstrument(self):
         return self.__instrument
+    
+    def incInstrument(self):
+        self.__instrument = self.__instrumentIter.next()
 
     def setOctave(self, oct):
         self.__octave = oct
@@ -146,26 +158,78 @@ class Player:
     def getOctave(self):
         return self.__octave
 
+    def incOctave(self):
+        self.setOctave(self.getOctave() + 1)
+        return self.getOctave()
+    
+    def decOctave(self):
+        self.setOctave(self.getOctave() - 1)
+        return self.getOctave()
+    
+    def resetOctave(self):
+        self.__octave = 1
+
     def setBeat(self, bpm):
         if bpm > 0:
             self.__beat = bpm
 
     def getBeat(self):
         return self.__beat
-
-    def resetOctave(self):
-        self.__octave = 1
+    
+    def incBeat(self):
+        self.setBeat(self.getBeat + 1)
+        return self.getBeat()
+    
+    def decBeat(self):
+        self.setBeat(self.getBeat - 1)
+        return self.getBeat()
+    
+    def resetVolume(self):
+        self.__volume = 1
 
     def clear(self):
-        self.__notes = []
-        self.__volume = 1
-        self.__octave = 1
-        self.__beat = 1
-        self.__decoder = musicSymbolDecoder()
-        self.__instrument = instrumentSymbol.PIANO
+        self.__init__()
+    
+    def addPause(self): # TODO: IMPLEMENTAR
+        pass
+
+    def keep(self): # TODO: IMPLEMENTAR
+        pass
     
     def readSymbol(self, symbol):
         print("DEBUG: vai ler o simbolo ", symbol)
+
+        if symbol in (musicSymbol.A,
+                      musicSymbol.B,
+                      musicSymbol.C,
+                      musicSymbol.D,
+                      musicSymbol.E,
+                      musicSymbol.F,
+                      musicSymbol.G):
+            self.addNote(symbol)
+        elif symbol == musicSymbol.PAUSE:
+            self.addPause()
+        elif symbol == musicSymbol.VOLUP:
+            self.incVolume()
+        elif symbol == musicSymbol.VOLDOWN:
+            self.decVolume()
+        elif symbol == musicSymbol.REPEATNOTE:
+            self.repeatNote()
+        elif symbol == musicSymbol.OCTAVEUP:
+            self.incOctave()
+        elif symbol == musicSymbol.OCTAVEDOWN:
+            self.decOctave()
+        elif symbol == musicSymbol.RESET:
+            self.resetOctave()
+            self.resetVolume()
+        elif symbol == musicSymbol.INSTRUMENT:
+            self.incInstrument()
+        elif symbol == musicSymbol.BPMUP:
+            self.incBeat()
+        elif symbol == musicSymbol.BPMDOWN:
+            self.decBeat()
+        elif symbol == musicSymbol.KEEP:
+            self.keep()
 
     def readSheetString(self, sheet):
         for char in sheet:
