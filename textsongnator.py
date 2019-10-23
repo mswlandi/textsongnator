@@ -1,5 +1,11 @@
 from enum import Enum
-import pyknon
+from pyknon.genmidi import *
+from pyknon.genmidi import *
+from pyknon.music import *
+from pyknon.notation import *
+from pyknon.pc_sets import*
+from pyknon.pcset import *
+from pyknon.simplemusic import *
 
 class instrumentSymbol(Enum):
     PIANO = 0
@@ -11,39 +17,57 @@ class instrumentSymbol(Enum):
 
 class musicSymbol(Enum):
     A = 0
-    B = 1
-    C = 2
-    D = 3
-    E = 4
-    F = 5
-    G = 6
-    PAUSE  = 7
-    VOLUP = 8
-    VOLDOWN = 9
-    REPEATNOTE = 10
-    OCTAVEUP = 11
-    OCTAVEDOWN = 12
-    RESET = 13
-    INSTRUMENT = 14
-    BPMUP = 15
-    BPMDOWN = 16
-    KEEP = 17
+    a = 1
+    B = 2
+    b = 3
+    C = 4
+    c = 5
+    D = 6
+    d = 7
+    E = 8
+    F = 9
+    f = 10
+    G = 11
+    g = 12
+    PAUSE  = 13
+    VOLUP = 14
+    VOLDOWN = 15
+    REPEATNOTE = 16
+    OCTAVEUP = 17
+    OCTAVEDOWN = 18
+    RESET = 19
+    INSTRUMENT = 20
+    BPMUP = 21
+    BPMDOWN = 22
+    KEEP = 23
 
 mapping = {
     "A": musicSymbol.A,
     "a": musicSymbol.A,
+    "A#": musicSymbol.a,
+    "a#": musicSymbol.a,
     "B": musicSymbol.B,
     "b": musicSymbol.B,
+    "B#": musicSymbol.b,
+    "b#": musicSymbol.b,
     "C": musicSymbol.C,
     "c": musicSymbol.C,
+    "C#": musicSymbol.c,
+    "c#": musicSymbol.c,
     "D": musicSymbol.D,
     "d": musicSymbol.D,
+    "D#": musicSymbol.d,
+    "d#": musicSymbol.d,
     "E": musicSymbol.E,
     "e": musicSymbol.E,
     "F": musicSymbol.F,
     "f": musicSymbol.F,
+    "F#": musicSymbol.f,
+    "f#": musicSymbol.f,
     "G": musicSymbol.G,
     "g": musicSymbol.G,
+    "G#": musicSymbol.g,
+    "g#": musicSymbol.g,
     "+": musicSymbol.VOLUP,
     "-": musicSymbol.VOLDOWN,
     "O": musicSymbol.REPEATNOTE,
@@ -93,7 +117,7 @@ class musicSymbolDecoder:
         # Lida com os caracteres que são prefixos de outros
         # que foram adicionados ao currentCharacter
         if self.__currentCharacter != '':
-            if char in ('+', '-'):
+            if char in ('+', '-', '#'):
                 self.__currentCharacter += char
                 self.__readChar()
                 return
@@ -102,7 +126,7 @@ class musicSymbolDecoder:
 
         # Lida com os caracteres que são prefixos de outros
         # que recém foram lidos
-        if char.upper() in ('B', 'O'):
+        if char.upper() in ('A', 'B', 'C', 'D', 'F', 'G', 'O'):
             self.__currentCharacter = char
         
         # Lida com qualquer outro caractere
@@ -177,11 +201,11 @@ class Player:
         return self.__beat
     
     def incBeat(self):
-        self.setBeat(self.getBeat + 1)
+        self.setBeat(self.getBeat() + 1)
         return self.getBeat()
     
     def decBeat(self):
-        self.setBeat(self.getBeat - 1)
+        self.setBeat(self.getBeat() - 1)
         return self.getBeat()
     
     def resetVolume(self):
@@ -196,17 +220,33 @@ class Player:
     def keep(self):  # UNDONE: keep
         pass
     
+    def symbol2Note(self, symbol):
+        if(symbol.name.islower()):
+            n = Note(symbol.name.upper()+'#')
+        else:
+            n = Note(symbol.name)
+        n.octave = self.getOctave()
+        n.volume = self.getVolume()
+        n.dur = 1/self.getBeat()
+        return n
+
     def readSymbol(self, symbol):
         print("DEBUG: vai ler o simbolo ", symbol)
 
         if symbol in (musicSymbol.A,
+                      musicSymbol.a,
                       musicSymbol.B,
+                      musicSymbol.b,
                       musicSymbol.C,
+                      musicSymbol.c,
                       musicSymbol.D,
+                      musicSymbol.d,
                       musicSymbol.E,
                       musicSymbol.F,
-                      musicSymbol.G):
-            self.addNote(symbol)
+                      musicSymbol.f,
+                      musicSymbol.G,
+                      musicSymbol.g):
+            self.addNote(self.symbol2Note(symbol))
         elif symbol == musicSymbol.PAUSE:
             self.addPause()
         elif symbol == musicSymbol.VOLUP:
@@ -231,6 +271,13 @@ class Player:
         elif symbol == musicSymbol.KEEP:
             self.keep()
 
+    def saveSong(self, filename):
+        notes = NoteSeq(self.__notes)
+        print(notes)
+        midi = Midi(number_tracks=1)
+        midi.seq_notes(notes, track=0)
+        midi.write(filename)
+
     def readSheetString(self, sheet):
         for char in sheet:
             self.__decoder.decode(char)
@@ -239,10 +286,19 @@ class Player:
             while symbol != None:
                 self.readSymbol(symbol)
                 symbol = self.__decoder.head()
+
+    def playSong(self, sheet):
+        self.readSheetString(sheet)
+        self.saveSong("temp.mid")
+
             
 
 # Esta parte do código só é executada se este arquivo
 # for executado, não caso seja importado como um módulo.
 if __name__ == "__main__":
     play = Player()
-    play.readSheetString("AB+BOO-CDEFGH")
+    play.setVolume(100)
+    play.setOctave(5)
+    play.setBeat(16)
+    play.playSong("O+ED#ED#EO-BDCAB+CEABEABCED#ED#EBDCA")
+    
