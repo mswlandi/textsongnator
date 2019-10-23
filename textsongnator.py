@@ -190,10 +190,10 @@ class Player:
     def clear(self):
         self.__init__()
     
-    def addPause(self): # TODO: IMPLEMENTAR
+    def addPause(self): # UNDONE: addPause
         pass
 
-    def keep(self): # TODO: IMPLEMENTAR
+    def keep(self):  # UNDONE: keep
         pass
     
     def readSymbol(self, symbol):
