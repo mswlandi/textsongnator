@@ -62,29 +62,63 @@ mapping = {
     }
 
 class musicSymbolDecoder:
-    __currentCharacter = ""
-    __symbols = []
+    def __init__(self):
+        self.__currentCharacter = ""
+        self.__symbols = []
+
+    def __readChar(self):
+        try:
+            self.__symbols.append(mapping[self.__currentCharacter])
+        except KeyError as e:
+            print("INFO: ", e, " não tem no dicionario, interpretando como KEEP.")
+            self.__symbols.append(musicSymbol.KEEP)
+        #print("DEBUG: simbolos lidos: ", self.__symbols)
+        self.__currentCharacter = ''
 
     def clear(self):
         self.__currentCharacter = ""
         self.__symbols = []
 
     def head(self):
-        return self.__symbols.pop()
-
-    def decode(self, string):
-        if mapping[string] != None:
-            self.__symbols.append(mapping[string])
+        if self.__symbols == []:
+            return None
         else:
-            self.__symbols.append(musicSymbol.KEEP)
+            return self.__symbols.pop(0)
+
+    # Prefixos:
+    # O de O+ e O-
+    # B de B+ e B-
+    def decode(self, char):
+
+        # Lida com os caracteres que são prefixos de outros
+        # que foram adicionados ao currentCharacter
+        if self.__currentCharacter != '':
+            if char in ('+', '-'):
+                self.__currentCharacter += char
+                self.__readChar()
+                return
+            else:
+                self.__readChar()
+
+        # Lida com os caracteres que são prefixos de outros
+        # que recém foram lidos
+        if char.upper() in ('B', 'O'):
+            self.__currentCharacter = char
+        
+        # Lida com qualquer outro caractere
+        else:
+            #print("DEBUG: __currentCharacter: ", self.__currentCharacter)
+            self.__currentCharacter = char
+            self.__readChar()
 
 class Player:
-    __notes = []
-    __volume = 1
-    __octave = 1
-    __beat = 1
-    __decoder = musicSymbolDecoder()
-    __instrument = instrumentSymbol.PIANO
+    def __init__(self):
+        self.__notes = []
+        self.__volume = 1
+        self.__octave = 1
+        self.__beat = 1
+        self.__decoder = musicSymbolDecoder()
+        self.__instrument = instrumentSymbol.PIANO
 
     def addNote(self, note):
         self.__notes.append(note)
@@ -129,3 +163,22 @@ class Player:
         self.__beat = 1
         self.__decoder = musicSymbolDecoder()
         self.__instrument = instrumentSymbol.PIANO
+    
+    def readSymbol(self, symbol):
+        print("DEBUG: vai ler o simbolo ", symbol)
+
+    def readSheetString(self, sheet):
+        for char in sheet:
+            self.__decoder.decode(char)
+
+            symbol = self.__decoder.head()
+            while symbol != None:
+                self.readSymbol(symbol)
+                symbol = self.__decoder.head()
+            
+
+# Esta parte do código só é executada se este arquivo
+# for executado, não caso seja importado como um módulo.
+if __name__ == "__main__":
+    play = Player()
+    play.readSheetString("AB+BOO-CDEFGH")
