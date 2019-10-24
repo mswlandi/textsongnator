@@ -1,18 +1,18 @@
 from enum import Enum
 from pyknon.genmidi import *
-from pyknon.genmidi import *
 from pyknon.music import *
 from pyknon.notation import *
-from pyknon.pc_sets import*
+from pyknon.pc_sets import *
 from pyknon.pcset import *
 from pyknon.simplemusic import *
+import os
 
 class instrumentSymbol(Enum):
     PIANO = 0
-    ACOUSTICGUITAR = 25
+    ACOUSTICGUITAR = 24
     ELECTRICGUITAR = 27
     VIOLIN = 40
-    VOICE = 54
+    VOICE = 52
     APPLAUSE = 126
 
 class musicSymbol(Enum):
@@ -201,11 +201,11 @@ class Player:
         return self.__beat
     
     def incBeat(self):
-        self.setBeat(self.getBeat() + 1)
+        self.setBeat(self.getBeat() + 5)
         return self.getBeat()
     
     def decBeat(self):
-        self.setBeat(self.getBeat() - 1)
+        self.setBeat(self.getBeat() - 5)
         return self.getBeat()
     
     def resetVolume(self):
@@ -274,7 +274,7 @@ class Player:
     def saveSong(self, filename):
         notes = NoteSeq(self.__notes)
         print(notes)
-        midi = Midi(number_tracks=1)
+        midi = Midi(number_tracks=1, instrument=self.__instrument.value)
         midi.seq_notes(notes, track=0)
         midi.write(filename)
 
@@ -297,8 +297,10 @@ class Player:
 # for executado, não caso seja importado como um módulo.
 if __name__ == "__main__":
     play = Player()
+    play.setInstrument(instrumentSymbol.VOICE)
     play.setVolume(100)
     play.setOctave(5)
     play.setBeat(16)
-    play.playSong("O+ED#ED#EO-BDCAB+CEABEABCED#ED#EBDCA")
+    play.playSong("EEECEGO-GO+CO-GEABA#AGO+EGAFGECDO+O+O++++++++++++++CCCCC")
+    os.system(".\\temp.mid")
     
