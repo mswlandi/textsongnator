@@ -1,11 +1,12 @@
 from enum import Enum
-from pyknon.genmidi import *
-from pyknon.music import *
-from pyknon.notation import *
-from pyknon.pc_sets import *
-from pyknon.pcset import *
-from pyknon.simplemusic import *
+from pyknon.genmidi import Midi
+from pyknon.music import Note, NoteSeq
 import os
+# não usados por enquanto:
+# from pyknon.notation import *
+# from pyknon.pc_sets import *
+# from pyknon.pcset import *
+# from pyknon.simplemusic import *
 
 class instrumentSymbol(Enum):
     PIANO = 0
@@ -82,7 +83,8 @@ mapping = {
     ".": musicSymbol.RESET,
     "\n": musicSymbol.INSTRUMENT,
     "B+": musicSymbol.BPMUP,
-    "B-": musicSymbol.BPMDOWN
+    "B-": musicSymbol.BPMDOWN,
+    " ": musicSymbol.PAUSE
     }
 
 class musicSymbolDecoder:
@@ -93,10 +95,17 @@ class musicSymbolDecoder:
     def __readChar(self):
         try:
             self.__symbols.append(mapping[self.__currentCharacter])
+
+        # Coloca um KEEP por caractere no currentCharacter
+        # para lidar com O#, C+ e similares da maneira certa
         except KeyError as e:
+
             print("INFO: ", e, " não tem no dicionario, interpretando como KEEP.")
-            self.__symbols.append(musicSymbol.KEEP)
-        #print("DEBUG: simbolos lidos: ", self.__symbols)
+
+            #pylint: disable=unused-variable
+            for char in self.__currentCharacter:
+                self.__symbols.append(musicSymbol.KEEP)
+        
         self.__currentCharacter = ''
 
     def clear(self):
@@ -110,8 +119,8 @@ class musicSymbolDecoder:
             return self.__symbols.pop(0)
 
     # Prefixos:
-    # O de O+ e O-
-    # B de B+ e B-
+    # {O,B} de {O,B}{-,+}
+    # {A-G} de {A-G}#
     def decode(self, char):
 
         # Lida com os caracteres que são prefixos de outros
@@ -131,16 +140,15 @@ class musicSymbolDecoder:
         
         # Lida com qualquer outro caractere
         else:
-            #print("DEBUG: __currentCharacter: ", self.__currentCharacter)
             self.__currentCharacter = char
             self.__readChar()
 
 class Player:
     def __init__(self):
         self.__notes = []
-        self.__volume = 1
-        self.__octave = 1
-        self.__beat = 1
+        self.__volume = 100
+        self.__octave = 5
+        self.__beat = 150
         self.__decoder = musicSymbolDecoder()
         self.__instrumentIter = iter(instrumentSymbol)
         self.__instrument = instrumentSymbol.PIANO
@@ -214,11 +222,15 @@ class Player:
     def clear(self):
         self.__init__()
     
-    def addPause(self): # UNDONE: addPause
-        pass
+    def addPause(self):
+        vol = self.getVolume()
+        self.setVolume(0)
+        self.addNote(self.symbol2Note(musicSymbol.A))
+        self.setVolume(vol)
 
-    def keep(self):  # UNDONE: keep
-        pass
+    def keep(self):
+        if self.__notes != []:
+            self.__notes[-1].dur += (60/self.getBeat())/4
     
     def symbol2Note(self, symbol):
         if(symbol.name.islower()):
@@ -227,7 +239,9 @@ class Player:
             n = Note(symbol.name)
         n.octave = self.getOctave()
         n.volume = self.getVolume()
-        n.dur = 1/self.getBeat()
+        # 60 bpm faz uma batida por segundo, e uma batida é uma semínima (0.25)
+        n.dur = (60/self.getBeat())/4
+
         return n
 
     def readSymbol(self, symbol):
@@ -279,13 +293,21 @@ class Player:
         midi.write(filename)
 
     def readSheetString(self, sheet):
-        for char in sheet:
-            self.__decoder.decode(char)
-
+        # Função interna para ler os dados devolvidos pelo decoder
+        def readDecoderHead():
             symbol = self.__decoder.head()
             while symbol != None:
                 self.readSymbol(symbol)
                 symbol = self.__decoder.head()
+            
+        for char in sheet:
+            self.__decoder.decode(char)
+            readDecoderHead()
+        
+        # Captura o último caractere, o que é preciso
+        # caso ele seja um de prefixo como O
+        self.__decoder.decode(" ")
+        readDecoderHead()
 
     def playSong(self, sheet):
         self.readSheetString(sheet)
@@ -297,10 +319,8 @@ class Player:
 # for executado, não caso seja importado como um módulo.
 if __name__ == "__main__":
     play = Player()
-    play.setInstrument(instrumentSymbol.VOICE)
-    play.setVolume(100)
-    play.setOctave(5)
-    play.setBeat(16)
-    play.playSong("EEECEGO-GO+CO-GEABA#AGO+EGAFGECDO+O+O++++++++++++++CCCCC")
+    play.setInstrument(instrumentSymbol.VIOLIN)
+    play.playSong("CDE F Gxxx")
     os.system(".\\temp.mid")
     
+# TODO: Mudar instrumento no meio da música
