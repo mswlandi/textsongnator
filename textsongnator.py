@@ -312,7 +312,7 @@ class Player:
 
     def playSong(self, sheet):
         self.readSheetString(sheet)
-        self.saveSong("temp.mid")
+        self.saveSong("two.mid")
 
             
 
@@ -320,8 +320,8 @@ class Player:
 # for executado, não caso seja importado como um módulo.
 if __name__ == "__main__":
     play = Player()
-    play.setInstrument(instrumentSymbol.VIOLIN)
-    play.playSong("CDE F Gxxx")
-    os.system(".\\temp.mid")
+    play.setInstrument(instrumentSymbol.PIANO)
+    play.playSong("ABC")
+    os.system(".\\two.mid")
     
 # TODO: Mudar instrumento no meio da música
