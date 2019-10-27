@@ -182,6 +182,7 @@ class Player:
         return self.__instrument
     
     def incInstrument(self):
+
         self.__instrument = self.__instrumentIter.next()
 
     def setOctave(self, oct):
