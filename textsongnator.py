@@ -143,15 +143,40 @@ class musicSymbolDecoder:
             self.__currentCharacter = char
             self.__readChar()
 
+# Classe para guardar partes da
+# música que tem um mesmo instrumento.
+class Track:
+    def __init__(self, notes, instrument):
+        self.__notes = notes
+        self.__instrument = instrument
+    
+    def getInstrument(self):
+        return self.__instrument
+
+    def getNotes(self):
+        return self.__notes
+    
+    # Inserts silence into beggining (to append to some other track)
+    def addPause(self, note):
+        firstNote = self.__notes[0]
+        n = Note("A")
+        n.octave = firstNote.octave
+        n.volume = 0
+        n.dur = firstNote.dur
+        self.__notes.append(note)
+
 class Player:
     def __init__(self):
+        # notes e instrument são variáveis de "buffer" para criar Tracks e adicioná-las ao tracks
         self.__notes = []
+        self.__instrument = instrumentSymbol.PIANO
+        self.__tracks = []
+        self.__instrumentIter = iter(instrumentSymbol)
+        next(self.__instrumentIter) # o primeiro next é o primeiro intstrumento
         self.__volume = 100
         self.__octave = 5
         self.__beat = 150
         self.__decoder = musicSymbolDecoder()
-        self.__instrumentIter = iter(instrumentSymbol)
-        self.__instrument = instrumentSymbol.PIANO
 
     def addNote(self, note):
         self.__notes.append(note)
@@ -175,15 +200,21 @@ class Player:
         if self.__notes != []:
             self.__notes.append(self.__notes[-1])
 
+    def __addTrack(self):
+        self.__tracks.append(Track(self.__notes, self.__instrument))
+        self.__notes = []
+    
     def setInstrument(self, instrument):
-        self.__instrument = instrument
+        if self.__instrument != instrument:
+            self.__addTrack()
+            self.__instrument = instrument
 
     def getInstrument(self):
         return self.__instrument
     
     def incInstrument(self):
-
-        self.__instrument = self.__instrumentIter.next()
+        nextInstrument = next(self.__instrumentIter)
+        self.setInstrument(nextInstrument)
 
     def setOctave(self, oct):
         self.__octave = oct
@@ -246,7 +277,7 @@ class Player:
         return n
 
     def readSymbol(self, symbol):
-        print("DEBUG: vai ler o simbolo ", symbol)
+        # print("DEBUG: vai ler o simbolo ", symbol)
 
         if symbol in (musicSymbol.A,
                       musicSymbol.a,
@@ -287,11 +318,39 @@ class Player:
             self.keep()
 
     def saveSong(self, filename):
-        notes = NoteSeq(self.__notes)
-        print(notes)
-        midi = Midi(number_tracks=1, instrument=self.__instrument.value)
-        midi.seq_notes(notes, track=0)
-        midi.write(filename)
+        def nameFile(filename, iterator):
+            return "".join(filename.split(".")[:-1]) + str(iterator) + "." + filename.split(".")[-1]
+
+        if self.__notes != []:
+            self.__addTrack()
+
+        # for track in self.__tracks:
+        #     track.addPause()
+
+        fileNameIterator = 0
+        for track in self.__tracks:
+            midi = Midi(number_tracks=1, instrument=track.getInstrument().value)
+            notes = NoteSeq(track.getNotes())
+            midi.seq_notes(notes, track=0)
+
+            midi.write(nameFile(filename, fileNameIterator))
+            fileNameIterator += 1
+        
+        fileNameIterator -= 1
+        if fileNameIterator > 0:
+            for i in range(fileNameIterator):
+                os.system("python midisox.py --combine concatenate " +
+                           nameFile(filename, i) + " " +
+                           nameFile(filename, i+1) + " " +
+                           nameFile(filename, i+1))
+                os.remove(nameFile(filename, i))
+        
+        try:
+            os.remove(filename)
+        except OSError:
+            pass # Se arquivo não existe, pode renomear de boas
+
+        os.rename(nameFile(filename, fileNameIterator), filename)
 
     def readSheetString(self, sheet):
         # Função interna para ler os dados devolvidos pelo decoder
@@ -310,9 +369,8 @@ class Player:
         self.__decoder.decode(" ")
         readDecoderHead()
 
-    def playSong(self, sheet):
+    def generateSong(self, sheet):
         self.readSheetString(sheet)
-        self.saveSong("two.mid")
 
             
 
@@ -321,7 +379,6 @@ class Player:
 if __name__ == "__main__":
     play = Player()
     play.setInstrument(instrumentSymbol.PIANO)
-    play.playSong("ABC")
-    os.system(".\\two.mid")
-    
-# TODO: Mudar instrumento no meio da música
+    play.generateSong("B+B+B+B+EEE\nCEGO-\nGO+CO-GE\nABA#A\nGO+EGA\nFGECDO-B")
+    play.saveSong("out.mid")
+    # os.system(".\\out.mid")
