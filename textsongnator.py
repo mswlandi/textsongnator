@@ -345,10 +345,8 @@ class Player:
                            nameFile(filename, i+1))
                 os.remove(nameFile(filename, i))
         
-        try:
+        if os.path.exists(filename):
             os.remove(filename)
-        except OSError:
-            pass # Se arquivo não existe, pode renomear de boas
 
         os.rename(nameFile(filename, fileNameIterator), filename)
 
