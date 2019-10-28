@@ -77,7 +77,8 @@ class Root(FloatLayout):
     ## Objective: it creates the song and then plays it.
     def play_song(self):
         self.play.clear()
-        self.play.playSong(self.text_input.text)
+        self.play.generateSong(self.text_input.text)
+        self.play.saveSong('temp.mid')
         sound = SoundLoader.load('temp.mid')
         if sound:
             sound.play()
