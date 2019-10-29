@@ -166,16 +166,16 @@ class Track:
         self.__notes.append(note)
 
 class Player:
-    def __init__(self):
+    def __init__(self, instrument = instrumentSymbol.PIANO, volume = 100, octave = 5, beat = 150):
         # notes e instrument são variáveis de "buffer" para criar Tracks e adicioná-las ao tracks
         self.__notes = []
-        self.__instrument = instrumentSymbol.PIANO
+        self.__instrument = instrument
         self.__tracks = []
         self.__instrumentIter = iter(instrumentSymbol)
-        next(self.__instrumentIter) # o primeiro next é o primeiro intstrumento
-        self.__volume = 100
-        self.__octave = 5
-        self.__beat = 150
+        next(self.__instrumentIter) # o primeiro next é o primeiro instrumento
+        self.__volume = volume
+        self.__octave = octave
+        self.__beat = beat
         self.__decoder = musicSymbolDecoder()
 
     def addNote(self, note):

@@ -28,8 +28,6 @@ class SaveDialog(FloatLayout):
 
 
 class Root(FloatLayout):
-    loadfile = ObjectProperty(None)
-    savefile = ObjectProperty(None)
     text_input = ObjectProperty(None)
     play = Player()
 
@@ -60,7 +58,7 @@ class Root(FloatLayout):
     ## Objective: put the text loaded from file to text_input attribute.
     def load(self, path, filename):
         with open(os.path.join(path, filename[0])) as stream:
-            self.text_input.text = stream.read()
+            self.text_input.text += stream.read()
 
         self.dismiss_popup()
 
@@ -68,7 +66,7 @@ class Root(FloatLayout):
     ## Objective: saves the MIDI file into user disk.
     def save(self, path, filename):
         if filename[-4:] != ".mid":
-            filename = filename + ".mid"
+            filename += ".mid"
         self.play.saveSong(os.path.join(path, filename))
 
         self.dismiss_popup()
