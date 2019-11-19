@@ -81,7 +81,7 @@ class Root(FloatLayout):
             if sound:
                 sound.play()
         except:
-            print("No sound to play.")
+            print("INFO: No sound to play.")
 
 
 class Textsongnator(App):
