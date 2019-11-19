@@ -2,11 +2,6 @@ from enum import Enum
 from pyknon.genmidi import Midi
 from pyknon.music import Note, NoteSeq
 import os
-# não usados por enquanto:
-# from pyknon.notation import *
-# from pyknon.pc_sets import *
-# from pyknon.pcset import *
-# from pyknon.simplemusic import *
 
 class instrumentSymbol(Enum):
     PIANO = 0
@@ -15,6 +10,11 @@ class instrumentSymbol(Enum):
     VIOLIN = 40
     VOICE = 52
     APPLAUSE = 126
+    AGOGO = 114
+    HARPSICHORD = 7
+    TUBULARBELLS = 15
+    PANFLUTE = 76
+    CHURCHORGAN = 20
 
 class musicSymbol(Enum):
     A = 0
@@ -33,78 +33,108 @@ class musicSymbol(Enum):
     PAUSE  = 13
     VOLUP = 14
     VOLDOWN = 15
-    REPEATNOTE = 16
-    OCTAVEUP = 17
-    OCTAVEDOWN = 18
-    RESET = 19
-    INSTRUMENT = 20
-    BPMUP = 21
-    BPMDOWN = 22
-    KEEP = 23
-
-mapping = {
-    "A": musicSymbol.A,
-    "a": musicSymbol.A,
-    "A#": musicSymbol.a,
-    "a#": musicSymbol.a,
-    "B": musicSymbol.B,
-    "b": musicSymbol.B,
-    "B#": musicSymbol.b,
-    "b#": musicSymbol.b,
-    "C": musicSymbol.C,
-    "c": musicSymbol.C,
-    "C#": musicSymbol.c,
-    "c#": musicSymbol.c,
-    "D": musicSymbol.D,
-    "d": musicSymbol.D,
-    "D#": musicSymbol.d,
-    "d#": musicSymbol.d,
-    "E": musicSymbol.E,
-    "e": musicSymbol.E,
-    "F": musicSymbol.F,
-    "f": musicSymbol.F,
-    "F#": musicSymbol.f,
-    "f#": musicSymbol.f,
-    "G": musicSymbol.G,
-    "g": musicSymbol.G,
-    "G#": musicSymbol.g,
-    "g#": musicSymbol.g,
-    "+": musicSymbol.VOLUP,
-    "-": musicSymbol.VOLDOWN,
-    "O": musicSymbol.REPEATNOTE,
-    "o": musicSymbol.REPEATNOTE,
-    "I": musicSymbol.REPEATNOTE,
-    "i": musicSymbol.REPEATNOTE,
-    "U": musicSymbol.REPEATNOTE,
-    "u": musicSymbol.REPEATNOTE,
-    "O+": musicSymbol.OCTAVEUP,
-    "O-": musicSymbol.OCTAVEDOWN,
-    "?": musicSymbol.RESET,
-    ".": musicSymbol.RESET,
-    "\n": musicSymbol.INSTRUMENT,
-    "B+": musicSymbol.BPMUP,
-    "B-": musicSymbol.BPMDOWN,
-    " ": musicSymbol.PAUSE
-    }
+    VOLDOUBLE = 16
+    REPEATNOTE = 17
+    OCTAVEUP = 18
+    OCTAVEDOWN = 19
+    RESET = 20
+    INSTRUMENT = 21
+    BPMUP = 22
+    BPMDOWN = 23
+    KEEP = 24
+    INSTRUMENTHARPSICHORD = 25
+    INSTRUMENTTUBULARBELLS = 26
+    INSTRUMENTAGOGO = 27
+    INSTRUMENTPANFLUTE = 28
+    INSTRUMENTCHURCHORGAN = 29
+    INSTRUMENTGENERAL1 = 30
+    INSTRUMENTGENERAL2 = 31
+    INSTRUMENTGENERAL3 = 32
+    INSTRUMENTGENERAL4 = 33
+    INSTRUMENTGENERAL5 = 34
+    INSTRUMENTGENERAL6 = 35
+    INSTRUMENTGENERAL7 = 36
+    INSTRUMENTGENERAL8 = 37
+    INSTRUMENTGENERAL9 = 38
+    INSTRUMENTGENERAL0 = 39
 
 class musicSymbolDecoder:
+    
+
     def __init__(self):
         self.__currentCharacter = ""
         self.__symbols = []
+        self.__mapping = {
+        "A": musicSymbol.A,
+        "a": musicSymbol.REPEATNOTE,
+        "A#": musicSymbol.a,
+        "a#": musicSymbol.a,
+        "B": musicSymbol.B,
+        "b": musicSymbol.REPEATNOTE,
+        "B#": musicSymbol.b,
+        "b#": musicSymbol.b,
+        "C": musicSymbol.C,
+        "c": musicSymbol.REPEATNOTE,
+        "C#": musicSymbol.c,
+        "c#": musicSymbol.c,
+        "D": musicSymbol.D,
+        "d": musicSymbol.REPEATNOTE,
+        "D#": musicSymbol.d,
+        "d#": musicSymbol.d,
+        "E": musicSymbol.E,
+        "e": musicSymbol.REPEATNOTE,
+        "F": musicSymbol.F,
+        "f": musicSymbol.REPEATNOTE,
+        "F#": musicSymbol.f,
+        "f#": musicSymbol.f,
+        "G": musicSymbol.G,
+        "g": musicSymbol.REPEATNOTE,
+        "G#": musicSymbol.g,
+        "g#": musicSymbol.g,
+        "+": musicSymbol.VOLUP,
+        "-": musicSymbol.VOLDOWN,
+        "O": musicSymbol.INSTRUMENTHARPSICHORD,
+        "o": musicSymbol.INSTRUMENTHARPSICHORD,
+        "I": musicSymbol.INSTRUMENTHARPSICHORD,
+        "i": musicSymbol.INSTRUMENTHARPSICHORD,
+        "U": musicSymbol.INSTRUMENTHARPSICHORD,
+        "u": musicSymbol.INSTRUMENTHARPSICHORD,
+        "O+": musicSymbol.OCTAVEUP,
+        "O-": musicSymbol.OCTAVEDOWN,
+        "?": musicSymbol.OCTAVEUP,
+        ".": musicSymbol.RESET,
+        "\n": musicSymbol.INSTRUMENTTUBULARBELLS,
+        "B+": musicSymbol.BPMUP,
+        "B-": musicSymbol.BPMDOWN,
+        " ": musicSymbol.VOLDOUBLE,
+        "!": musicSymbol.INSTRUMENTAGOGO,
+        "1": musicSymbol.INSTRUMENTGENERAL1,
+        "2": musicSymbol.INSTRUMENTGENERAL2,
+        "3": musicSymbol.INSTRUMENTGENERAL3,
+        "4": musicSymbol.INSTRUMENTGENERAL4,
+        "5": musicSymbol.INSTRUMENTGENERAL5,
+        "6": musicSymbol.INSTRUMENTGENERAL6,
+        "7": musicSymbol.INSTRUMENTGENERAL7,
+        "8": musicSymbol.INSTRUMENTGENERAL8,
+        "9": musicSymbol.INSTRUMENTGENERAL9,
+        "0": musicSymbol.INSTRUMENTGENERAL0,
+        ";": musicSymbol.INSTRUMENTPANFLUTE,
+        ",": musicSymbol.INSTRUMENTCHURCHORGAN
+        }
 
     def __readChar(self):
         try:
-            self.__symbols.append(mapping[self.__currentCharacter])
+            self.__symbols.append(self.__mapping[self.__currentCharacter])
 
         # Coloca um KEEP por caractere no currentCharacter
         # para lidar com O#, C+ e similares da maneira certa
         except KeyError as e:
 
-            print("INFO: ", e, " não tem no dicionario, interpretando como KEEP.")
+            print("INFO: ", e, " não tem no dicionario, interpretando como REPEATNOTE.")
 
             #pylint: disable=unused-variable
             for char in self.__currentCharacter:
-                self.__symbols.append(musicSymbol.KEEP)
+                self.__symbols.append(musicSymbol.REPEATNOTE)
         
         self.__currentCharacter = ''
 
@@ -137,6 +167,7 @@ class musicSymbolDecoder:
         # que recém foram lidos
         if char.upper() in ('A', 'B', 'C', 'D', 'F', 'G', 'O'):
             self.__currentCharacter = char
+
         
         # Lida com qualquer outro caractere
         else:
@@ -196,6 +227,10 @@ class Player:
         self.setVolume(self.getVolume() - 1)
         return self.getVolume()
 
+    def doubleVolume(self):
+        self.setVolume((self.getVolume()*2)%(256-100) + 100)
+        return self.getVolume()
+
     def repeatNote(self):
         if self.__notes != []:
             self.__notes.append(self.__notes[-1])
@@ -214,6 +249,17 @@ class Player:
     
     def incInstrument(self):
         nextInstrument = next(self.__instrumentIter)
+        self.setInstrument(nextInstrument)
+
+    def setGeneralInstrument(self, number):
+        nextInstrument = self.getInstrument()
+        for i in range(0, number):
+            try:
+                nextInstrument = next(self.__instrumentIter)
+            except:
+                self.__instrumentIter = iter(instrumentSymbol)
+                nextInstrument = instrumentSymbol.PIANO
+            
         self.setInstrument(nextInstrument)
 
     def setOctave(self, oct):
@@ -277,8 +323,6 @@ class Player:
         return n
 
     def readSymbol(self, symbol):
-        # print("DEBUG: vai ler o simbolo ", symbol)
-
         if symbol in (musicSymbol.A,
                       musicSymbol.a,
                       musicSymbol.B,
@@ -299,6 +343,8 @@ class Player:
             self.incVolume()
         elif symbol == musicSymbol.VOLDOWN:
             self.decVolume()
+        elif symbol == musicSymbol.VOLDOUBLE:
+            self.doubleVolume()
         elif symbol == musicSymbol.REPEATNOTE:
             self.repeatNote()
         elif symbol == musicSymbol.OCTAVEUP:
@@ -310,6 +356,11 @@ class Player:
             self.resetVolume()
         elif symbol == musicSymbol.INSTRUMENT:
             self.incInstrument()
+        elif symbol in musicSymbol:
+            if symbol.name[0:-1] == "INSTRUMENTGENERAL":
+                self.setGeneralInstrument(int(symbol.name[-1]))
+            elif symbol.name[0:10] == "INSTRUMENT":
+                self.setInstrument(instrumentSymbol[symbol.name[10:]])
         elif symbol == musicSymbol.BPMUP:
             self.incBeat()
         elif symbol == musicSymbol.BPMDOWN:
@@ -323,9 +374,6 @@ class Player:
 
         if self.__notes != []:
             self.__addTrack()
-
-        # for track in self.__tracks:
-        #     track.addPause()
 
         fileNameIterator = 0
         for track in self.__tracks:

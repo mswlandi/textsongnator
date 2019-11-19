@@ -68,7 +68,6 @@ class Root(FloatLayout):
         if filename[-4:] != ".mid":
             filename += ".mid"
         self.play.saveSong(os.path.join(path, filename))
-
         self.dismiss_popup()
 
     ## play_song: void -> void
@@ -76,10 +75,13 @@ class Root(FloatLayout):
     def play_song(self):
         self.play.clear()
         self.play.generateSong(self.text_input.text)
-        self.play.saveSong('temp.mid')
-        sound = SoundLoader.load('temp.mid')
-        if sound:
-            sound.play()
+        try:
+            self.play.saveSong('temp.mid')
+            sound = SoundLoader.load('temp.mid')
+            if sound:
+                sound.play()
+        except:
+            print("No sound to play.")
 
 
 class Textsongnator(App):
