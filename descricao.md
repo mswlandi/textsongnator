@@ -123,11 +123,13 @@
   - setVolume(vol): define o atributo _volume_ da classe para o dado como parâmetro do método.
   - incVolume(): incrementa o atributo _volume_ da classe.
   - decVolume(): decrementa o atributo _volume_ da classe.
+  - doubleVolume(): dobra o atributo _volume_ da classe.
   - repeatNote(): repete a última nota acrescentada na lista de notas, colocando-a novamente no final da lista.
   - _(private)_ addTrack(): acrescenta uma nova track a lista de tracks com as notas guardadas até então e o instrumento atual. Após isso, reinicializa a lista de notas da classe.
   - setInstrument(instrument): define o atributo _instrument_ da classe.
   - getInstrument(): retorna o atributo _instrument_ da classe.
   - incInstrument(): define o atributo _instrument_ da classe como o próximo item do iterador _instrumentIter_ - também atributo desta classe.
+  - setGeneralInstrument(number): define o atributo _instrument_ da classe como o enésimo item a partir do item dado pelo iterador _instrumentIter_ - possuindo uma definição circular. 
   - setOctave(oct): define o atributo _octave_ da classe.
   - incOctave(): incrementa o atributo _octave_ da classe.
   - decOctave(): decrementa o atributo _octave_ da classe.
