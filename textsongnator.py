@@ -165,7 +165,7 @@ class musicSymbolDecoder:
 
         # Lida com os caracteres que são prefixos de outros
         # que recém foram lidos
-        if char.upper() in ('A', 'B', 'C', 'D', 'F', 'G', 'O'):
+        if char.upper() in ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'O'):
             self.__currentCharacter = char
 
         
@@ -208,6 +208,7 @@ class Player:
         self.__octave = octave
         self.__beat = beat
         self.__decoder = musicSymbolDecoder()
+        self.__lastChar = None
 
     def addNote(self, note):
         self.__notes.append(note)
@@ -232,8 +233,11 @@ class Player:
         return self.getVolume()
 
     def repeatNote(self):
-        if self.__notes != []:
-            self.__notes.append(self.__notes[-1])
+        if self.__lastChar in ('A', 'B', 'C', 'D', 'E', 'F', 'G'):
+            if self.__notes != []:
+                self.__notes.append(self.__notes[-1])
+        else:
+            self.addPause()
 
     def __addTrack(self):
         self.__tracks.append(Track(self.__notes, self.__instrument))
@@ -409,6 +413,7 @@ class Player:
         for char in sheet:
             self.__decoder.decode(char)
             readDecoderHead()
+            self.__lastChar = char
         
         # Captura o último caractere, o que é preciso
         # caso ele seja um de prefixo como O
@@ -425,6 +430,6 @@ class Player:
 if __name__ == "__main__":
     play = Player()
     play.setInstrument(instrumentSymbol.PIANO)
-    play.generateSong("B+B+B+B+EEE\nCEGO-\nGO+CO-GE\nABA#A\nGO+EGA\nFGECDO-B")
+    play.generateSong("ABO+çC")
     play.saveSong("out.mid")
     # os.system(".\\out.mid")
