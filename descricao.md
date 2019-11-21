@@ -1,6 +1,6 @@
 ## Descrição do programa
 
-​	O programa _textsongnator_ busca gerar arquivos de áudio a partir de qualquer entrada válida de texto. Para isso, foi necessário arbitrariamente escolher caracteres que serviriam para realizar algumas operações sobre este áudio gerado - estas escolhas foram definidas previamente no enunciado da primeira fase do trabalho.
+​	O programa _textsongnator_ busca gerar arquivos de áudio a partir de qualquer entrada válida de texto. Para isso, foi necessário arbitrariamente escolher caracteres que serviriam para realizar algumas operações sobre este áudio gerado - estas escolhas foram definidas previamente no enunciado da primeira fase do trabalho e, depois, alteradas na terceira.
 
 ​	Como este programa deve garantir uma boa relação entre o seu manuseio e usuário, a biblioteca [Kivy](kivy.org) foi escolhida por ser amplamente utilizada para criação de interfaces e, por consequência, existir muito material sobre ela. Assim sendo, foi criado um arquivo Python apenas para realizar as operações entre a interface de usuário e a aplicação, possuindo as seguintes classes:
 
@@ -52,6 +52,11 @@
   - VIOLIN = 40
   - VOICE = 52
   - APPLAUSE = 126
+  - AGOGO = 114
+  - HARPSICHORD = 7
+  - TUBULARBELLS = 15
+  - PANFLUTE = 76
+  - CHURCHORGAN = 20
 
 - **musicSymbol**(Enum): assim como a classe acima, esta classe apenas define as notas e seus valores que serão utilizados depois para realizar a transformação do texto para áudio. Cada letra maiúscula se refere diretamente a uma nota - por exemplo, A se refere a nota lá (A). Já as letras minúsculas se referem a versão sustenido da sua letra maiúscula - por exemplo, a se refere a nota lá sustenido (A#).
 
@@ -71,14 +76,30 @@
   - PAUSE = 13
   - VOLUP = 14
   - VOLDOWN = 15
-  - REPEATNOTE = 16
-  - OCTAVEUP = 17
-  - OCTAVEDOWN = 18
-  - RESET = 19
-  - INSTRUMENT = 20
-  - BPMUP = 21
-  - BPMDOWN = 22
-  - KEEP = 23
+  - VOLDOUBLE = 16
+  - REPEATNOTE = 17
+  - OCTAVEUP = 18
+  - OCTAVEDOWN = 19
+  - RESET = 20
+  - INSTRUMENT = 21
+  - BPMUP = 22
+  - BPMDOWN = 23
+  - KEEP = 24
+  - INSTRUMENTHARPSICHORD = 25
+  - INSTRUMENTTUBULARBELLS = 26
+  - INSTRUMENTAGOGO = 27
+  - INSTRUMENTPANFLUTE = 28
+  - INSTRUMENTCHURCHORGAN = 29
+  - INSTRUMENTGENERAL1 = 30
+  - INSTRUMENTGENERAL2 = 31
+  - INSTRUMENTGENERAL3 = 32
+  - INSTRUMENTGENERAL4 = 33
+  - INSTRUMENTGENERAL5 = 34
+  - INSTRUMENTGENERAL6 = 35
+  - INSTRUMENTGENERAL7 = 36
+  - INSTRUMENTGENERAL8 = 37
+  - INSTRUMENTGENERAL9 = 38
+  - INSTRUMENTGENERAL0 = 39
 
   O mapeamento do caractere para um objeto desta classe é feito utilizando um dicionário pré-definido no código.
 
@@ -147,3 +168,4 @@
   - saveSong(filename): salva o áudio dado pela concatenação ordenada de todas as tracks contidas no atributo _tracks_ com o nome e caminho dado como parâmetro.
   - readSheetString(sheet): lê o texto, decodifica-o e coloca dentro do atributo _tracks_ segundo sua organização.
   - generateSong(sheet): gera o som de acordo com a função _readSheetString_.
+  - isThereSong(): retorna um valor booleano de acordo com a existência ou não de som.
