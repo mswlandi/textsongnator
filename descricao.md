@@ -22,7 +22,7 @@
 
   - load: é o botão que realiza a operação e carrega o texto para a aplicação.
 
-- cancel: é o botão que a cancela a operação e mantém o texto da aplicação exatamente da mesma forma que estava antes.
+  - cancel: é o botão que a cancela a operação e mantém o texto da aplicação exatamente da mesma forma que estava antes.
 
 - **SaveDialog**(FloatLayout): é a classe referente a parte de salvar o arquivo MIDI. Para isso, é necessário que ela contenha os atributos:
 
