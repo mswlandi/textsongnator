@@ -2,11 +2,17 @@
 
 ​	O programa _textsongnator_ busca gerar arquivos de áudio a partir de qualquer entrada válida de texto. Para isso, foi necessário arbitrariamente escolher caracteres que serviriam para realizar algumas operações sobre este áudio gerado - estas escolhas foram definidas previamente no enunciado da primeira fase do trabalho e, depois, alteradas na terceira.
 
+![Diagrama de casos de uso](https://i.imgur.com/tVWldsg.png)
+
 ​	Como este programa deve garantir uma boa relação entre o seu manuseio e usuário, a biblioteca [Kivy](kivy.org) foi escolhida por ser amplamente utilizada para criação de interfaces e, por consequência, existir muito material sobre ela. Assim sendo, foi criado um arquivo Python apenas para realizar as operações entre a interface de usuário e a aplicação, possuindo as seguintes classes:
 
 ![Text Editor](https://imgur.com/ChMlyei.png)
 
 ![Buttons](https://imgur.com/faOdTC6.png)
+
+![Load](https://i.imgur.com/EjIZVX0.png)
+
+![Save](https://i.imgur.com/iRSY6Jn.png)
 
 
 
