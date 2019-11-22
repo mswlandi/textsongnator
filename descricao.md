@@ -1,4 +1,8 @@
-## Descrição do programa
+_Henry Bernardo Kochenborger de Avila_
+
+_Marcos Samuel Winkel Landi_
+
+## Documentação do programa
 
 ​	O programa _textsongnator_ busca gerar arquivos de áudio a partir de qualquer entrada válida de texto. Para isso, foi necessário arbitrariamente escolher caracteres que serviriam para realizar algumas operações sobre este áudio gerado - estas escolhas foram definidas previamente no enunciado da primeira fase do trabalho e, depois, alteradas na terceira.
 
