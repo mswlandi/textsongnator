@@ -4,7 +4,7 @@
 
 ![Diagrama de casos de uso](https://i.imgur.com/tVWldsg.png)
 
-​	Como este programa deve garantir uma boa relação entre o seu manuseio e usuário, a biblioteca [Kivy](kivy.org) foi escolhida por ser amplamente utilizada para criação de interfaces e, por consequência, existir muito material sobre ela. Assim sendo, foi criado um arquivo Python apenas para realizar as operações entre a interface de usuário e a aplicação, possuindo as seguintes classes:
+​	Como este programa deve garantir uma boa relação entre o seu manuseio e usuário, a biblioteca [Kivy](kivy.org) foi escolhida por ser amplamente utilizada para criação de interfaces e, por consequência, existir muito material sobre ela.
 
 ![Text Editor](https://imgur.com/ChMlyei.png)
 
@@ -17,6 +17,8 @@
 
 
 
+
+Assim sendo, foi criado um arquivo Python apenas para realizar as operações entre a interface de usuário e a aplicação, possuindo as seguintes classes:
 
 - **LoadDialog**(FloatLayout): é a classe que guarda os _widgets_ que irão possibilitar o usuário carregar um arquivo texto que irá implicar no som gerado pela aplicação. Dessa forma, seus atributos são:
 
@@ -45,6 +47,10 @@
   - play_song(): salva um arquivo MIDI temporário, gera o som com o objeto _play_ e roda o som gerado na aplicação.
 
 - **Textsongnator**(App): é a própria interface gráfica, definida pelo arquivo _.kv_ de mesmo nome. Este arquivo define o conteúdo da interface, considerando suas páginas, botões, entradas, e realizando as ligações necessárias entre a aplicação e a interface.
+
+E o diagrama de classes da interface gráfica:
+
+![diagrama de classes](https://i.imgur.com/glA68z7.jpg)
 
 ​	Sobre a aplicação, a biblioteca [Pyknon](github.com/kroger/pyknon) foi utilizada pois simplifica o tratamento do áudio. Ademais, para garantir algumas das definições impostas pelo enunciado do trabalho, foi necessário utilizar a ferramenta [midisox](pjb.com.au/midi/midisox.html) que permite, por exemplo, concatenar arquivos MIDI, possibilitando que o arquivo possua diversos instrumentos - essa que é uma limitação da biblioteca Pyknon.
 
