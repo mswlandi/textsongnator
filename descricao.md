@@ -48,7 +48,11 @@
 
 ​	Sobre a aplicação, a biblioteca [Pyknon](github.com/kroger/pyknon) foi utilizada pois simplifica o tratamento do áudio. Ademais, para garantir algumas das definições impostas pelo enunciado do trabalho, foi necessário utilizar a ferramenta [midisox](pjb.com.au/midi/midisox.html) que permite, por exemplo, concatenar arquivos MIDI, possibilitando que o arquivo possua diversos instrumentos - essa que é uma limitação da biblioteca Pyknon.
 
+
+
 ![diagrama de classes](https://i.imgur.com/4lSUD0f.png)
+
+​	
 
 ​	Para efetivar a funcionalidade do programa, algumas classes foram criadas em outro arquivo Python - as mesmas citadas na fase 1 do projeto, mas com algumas alterações nos seus métodos ou atributos, acrescentadas de uma outra não citada anteriormente -, tais como:
 
