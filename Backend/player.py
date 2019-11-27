@@ -202,7 +202,7 @@ class Player:
         fileNameIterator -= 1
         if fileNameIterator > 0:
             for i in range(fileNameIterator):
-                os.system("python midisox.py --combine concatenate " +
+                os.system("python Backend/Thirdparties/midisox.py --combine concatenate " +
                            nameFile(filename, i) + " " +
                            nameFile(filename, i+1) + " " +
                            nameFile(filename, i+1))

@@ -18,6 +18,14 @@ kivy.require("1.11.1")
 
 import pygame
 
+class ErrorPopup(Popup):
+    ## init: str -> void
+    ## Objective: creates an error Popup with a message that is the given string and has a button to dismiss. 
+    def __init__(self, msg):
+        self.__closeButton = Button(text='Dismiss')
+        Popup.__init__(self, title=msg, content=self.__closeButton, auto_dismiss=False, size_hint=(0.5, 0.2))
+        self.__closeButton.bind(on_press=self.dismiss)
+
 
 class LoadDialog(FloatLayout):
     load = ObjectProperty(None)
@@ -57,13 +65,17 @@ class Root(FloatLayout):
                             size_hint=(0.9, 0.9))
         self._popup.open()
 
+
     ## load: str str -> void
     ## Objective: put the text loaded from file to text_input attribute.
     def load(self, path, filename):
+        
         if str(filename).endswith('.txt'):
             with open(os.path.join(path, filename[0])) as stream:
                 self.text_input.text += stream.read()
         else:
+            errorPopup = ErrorPopup("This file " + str(filename) + " is not a .txt.")
+            errorPopup.open()
             print("ERROR: This file", filename,"is not a .txt.")
 
         self.dismiss_popup()
@@ -81,8 +93,12 @@ class Root(FloatLayout):
             if self.play.isThereSong():
                 self.play.saveSong(os.path.join(path, filename))
             else:
+                errorPopup = ErrorPopup("There is no song to save.")
+                errorPopup.open()
                 print("ERROR: There is no song to save.")
         except PermissionError:
+            errorPopup = ErrorPopup("Already exists a file with this name.")
+            errorPopup.open()
             print("ERROR: Already exists a file with this name.")
 
         self.dismiss_popup()

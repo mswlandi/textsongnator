@@ -13,11 +13,3 @@ class Track:
     def getNotes(self):
         return self.__notes
     
-    # Inserts silence into beggining (to append to some other track)
-    def addPause(self, note):
-        firstNote = self.__notes[0]
-        n = Note("A")
-        n.octave = firstNote.octave
-        n.volume = 0
-        n.dur = firstNote.dur
-        self.__notes.append(note)
