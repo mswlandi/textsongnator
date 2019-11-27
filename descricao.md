@@ -1,10 +1,14 @@
-## Descrição do programa
+_Henry Bernardo Kochenborger de Avila_
+
+_Marcos Samuel Winkel Landi_
+
+## Documentação do programa
 
 ​	O programa _textsongnator_ busca gerar arquivos de áudio a partir de qualquer entrada válida de texto. Para isso, foi necessário arbitrariamente escolher caracteres que serviriam para realizar algumas operações sobre este áudio gerado - estas escolhas foram definidas previamente no enunciado da primeira fase do trabalho e, depois, alteradas na terceira.
 
 ![Diagrama de casos de uso](https://i.imgur.com/tVWldsg.png)
 
-​	Como este programa deve garantir uma boa relação entre o seu manuseio e usuário, a biblioteca [Kivy](kivy.org) foi escolhida por ser amplamente utilizada para criação de interfaces e, por consequência, existir muito material sobre ela. Assim sendo, foi criado um arquivo Python apenas para realizar as operações entre a interface de usuário e a aplicação, possuindo as seguintes classes:
+​	Como este programa deve garantir uma boa relação entre o seu manuseio e usuário, a biblioteca [Kivy](kivy.org) foi escolhida por ser amplamente utilizada para criação de interfaces e, por consequência, existir muito material sobre ela.
 
 ![Text Editor](https://imgur.com/ChMlyei.png)
 
@@ -17,6 +21,8 @@
 
 
 
+
+Assim sendo, foi criado um arquivo Python apenas para realizar as operações entre a interface de usuário e a aplicação, possuindo as seguintes classes:
 
 - **LoadDialog**(FloatLayout): é a classe que guarda os _widgets_ que irão possibilitar o usuário carregar um arquivo texto que irá implicar no som gerado pela aplicação. Dessa forma, seus atributos são:
 
@@ -46,7 +52,17 @@
 
 - **Textsongnator**(App): é a própria interface gráfica, definida pelo arquivo _.kv_ de mesmo nome. Este arquivo define o conteúdo da interface, considerando suas páginas, botões, entradas, e realizando as ligações necessárias entre a aplicação e a interface.
 
+E o diagrama de classes da interface gráfica:
+
+![diagrama de classes](https://i.imgur.com/glA68z7.jpg)
+
 ​	Sobre a aplicação, a biblioteca [Pyknon](github.com/kroger/pyknon) foi utilizada pois simplifica o tratamento do áudio. Ademais, para garantir algumas das definições impostas pelo enunciado do trabalho, foi necessário utilizar a ferramenta [midisox](pjb.com.au/midi/midisox.html) que permite, por exemplo, concatenar arquivos MIDI, possibilitando que o arquivo possua diversos instrumentos - essa que é uma limitação da biblioteca Pyknon.
+
+
+
+![diagrama de classes](https://i.imgur.com/4lSUD0f.png)
+
+​	
 
 ​	Para efetivar a funcionalidade do programa, algumas classes foram criadas em outro arquivo Python - as mesmas citadas na fase 1 do projeto, mas com algumas alterações nos seus métodos ou atributos, acrescentadas de uma outra não citada anteriormente -, tais como:
 
