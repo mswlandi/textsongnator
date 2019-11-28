@@ -69,12 +69,12 @@ class Root(FloatLayout):
     ## load: str str -> void
     ## Objective: put the text loaded from file to text_input attribute.
     def load(self, path, filename):
-        
-        if str(filename).endswith('.txt'):
+
+        if filename[0].endswith('.txt'):
             with open(os.path.join(path, filename[0])) as stream:
                 self.text_input.text += stream.read()
         else:
-            errorPopup = ErrorPopup("This file " + str(filename) + " is not a .txt.")
+            errorPopup = ErrorPopup("This file " + filename[0] + " is not a .txt.")
             errorPopup.open()
             print("ERROR: This file", filename,"is not a .txt.")
 

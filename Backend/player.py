@@ -40,7 +40,10 @@ class Player:
         return self.getVolume()
 
     def doubleVolume(self):
-        self.setVolume((self.getVolume()*2)%(256-100) + 100)
+        if self.getVolume()*2 > 255:
+            self.setVolume(100)
+        else:
+            self.setVolume(self.getVolume()*2)
         return self.getVolume()
 
     def repeatNote(self):
